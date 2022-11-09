@@ -1,6 +1,6 @@
 BINARY_NAME=main.out
 
-all: vet test build
+all: vet staticcheck test build
 
 build:
 	go build -o ${BINARY_NAME} main.go
@@ -21,3 +21,6 @@ dep:
 
 vet:
 	go vet
+
+staticcheck:
+	staticcheck ./...
