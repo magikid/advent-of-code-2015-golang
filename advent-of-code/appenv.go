@@ -3,6 +3,11 @@ package adventofcode
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"regexp"
+	"strconv"
+	"sync"
 )
 
 const AllDays = 0
@@ -33,11 +38,39 @@ func (app *appEnv) fromArgs(args []string) error {
 }
 
 func (app *appEnv) run() error {
-	// Check that the file path exists and is readable
+	entries, err := os.ReadDir(app.puzzleInputPath)
+	if err != nil {
+		return err
+	}
 
-	// Check that the given day and part exist and aren't empty
-	// Build a list of existing and readable inputs
-	// For each input, run its runner
+	puzzleInputMatcher := regexp.MustCompile(`day(\d+)`)
+	wg := sync.WaitGroup{}
+
+	for _, entry := range entries {
+		if entry.Type().IsRegular() && puzzleInputMatcher.MatchString(entry.Name()) {
+			matches := puzzleInputMatcher.FindStringSubmatch(entry.Name())
+			currentDay, _ := strconv.ParseInt(matches[1], 10, 0)
+			puzzleInput, err := app.readPuzzleInput(entry)
+			if err != nil {
+				return err
+			}
+
+			puzzle := Puzzle{currentDay, puzzleInput}
+			wg.Add(1)
+			go puzzle.Solve(&wg)
+		}
+	}
+
+	wg.Wait()
 
 	return nil
+}
+
+func (app *appEnv) readPuzzleInput(entry os.DirEntry) (string, error) {
+	content, err := ioutil.ReadFile(app.puzzleInputPath + string(os.PathSeparator) + entry.Name())
+	if err != nil {
+		return "", err
+	}
+
+	return string(content), nil
 }
