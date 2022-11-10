@@ -32,7 +32,6 @@ func (p *present) neededRibbon() int64 {
 
 func (day2 *Day2) parts() (PuzzleAnswer, PuzzleAnswer) {
 	return day2.part1(), day2.part2()
-
 }
 
 func (day2 *Day2) part1() PuzzleAnswer {

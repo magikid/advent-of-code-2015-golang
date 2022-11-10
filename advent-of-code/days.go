@@ -36,6 +36,9 @@ func (puzzle *Puzzle) SolveParts() (PuzzleAnswer, PuzzleAnswer) {
 	case 2:
 		puzzle := Day2{&puzzle.input}
 		return puzzle.parts()
+	case 3:
+		puzzle := Day3{&puzzle.input}
+		return puzzle.parts()
 	default:
 		return PuzzleAnswer{}, PuzzleAnswer{}
 	}
