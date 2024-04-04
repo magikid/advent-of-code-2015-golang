@@ -3,7 +3,6 @@ package adventofcode
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
@@ -67,7 +66,7 @@ func (app *appEnv) run() error {
 }
 
 func (app *appEnv) readPuzzleInput(entry os.DirEntry) (string, error) {
-	content, err := ioutil.ReadFile(app.puzzleInputPath + string(os.PathSeparator) + entry.Name())
+	content, err := os.ReadFile(app.puzzleInputPath + string(os.PathSeparator) + entry.Name())
 	if err != nil {
 		return "", err
 	}
